@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>巴别塔 doc</title>
+<link rel="stylesheet" href="assets/base.css" />
+<style>
+  /* ── 首页专属样式 ── */
+  .index-hero {
+    margin-bottom: 64px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .index-hero h1 {
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    margin-bottom: 18px;
+    color: #fff;
+  }
+  .index-hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #fff 0%, #c4b5fd 50%, #7c6af7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .index-hero .tagline {
+    font-size: 16px;
+    color: var(--text-secondary);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 28px;
+  }
+  .index-hero .meta-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent-border);
+    border-radius: 4px;
+    padding: 4px 10px;
+  }
+  .meta-badge .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* 分区标题 */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-subtle);
+  }
+
+  /* 通知栏 */
+  .notice {
+    margin-top: 48px;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .notice strong { color: var(--text-secondary); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <a href="/">巴别塔 <span class="sidebar-logo-badge">doc</span></a>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">导航</div>
+      <a class="sidebar-link active" href="/">🏠 首页</a>
+      <div class="sidebar-section" style="margin-top:8px">前端</div>
+      <a class="sidebar-link sub" href="frontend/tracking.html">埋点使用指南</a>
+    </div>
+    <hr class="sidebar-toc-divider" />
+    <div id="page-toc"></div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Hero -->
+    <div class="index-hero">
+      <div class="hero-eyebrow">团队内部知识库</div>
+      <h1>巴别塔<br/><em>doc</em></h1>
+      <p class="tagline">
+        产品、运营、BI、研发协同的现状记录与方案展示空间。<br/>
+        用精准的文档代替模糊的口头对齐。
+      </p>
+      <div class="meta-row">
+        <span class="meta-badge"><span class="dot" style="background:#3ecf8e"></span>ZMX 前端团队</span>
+        <span class="meta-badge"><span class="dot" style="background:#60a5fa"></span>内部访问</span>
+        <span class="meta-badge"><span class="dot" style="background:#7c6af7"></span>持续更新</span>
+      </div>
+    </div>
+
+    <!-- 前端文档 -->
+    <div class="section-label">前端</div>
+    <div class="doc-cards">
+
+      <a class="doc-card" href="frontend/tracking.html">
+        <span class="doc-card-icon">📊</span>
+        <div class="doc-card-title">埋点使用指南</div>
+        <div class="doc-card-desc">Analytics Tracker 接入规范。含决策流程图、生命周期时序、6 大上报场景与完整代码模板。</div>
+        <span class="doc-card-arrow">→</span>
+      </a>
+
+    </div>
+
+    <!-- 通知栏 -->
+    <div class="notice">
+      <strong>仅限内部访问。</strong>
+      文档内容涉及团队技术规范与内部 SDK 接口细节，面向产研 / 运营 / BI 的跨职能协作，请勿对外传播。
+      如需新增文档板块，请联系前端团队。
+    </div>
+
+    <div class="footer">
+      <span>巴别塔 doc · ZMX 前端团队</span>
+      <span>仅限内部访问</span>
+    </div>
+  </main>
+
+</div>
+<script src="assets/toc.js"></script>
+</body>
+</html>
