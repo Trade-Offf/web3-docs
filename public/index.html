@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>web3happened docs · ZMX 前端团队内部知识库</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/assets/base.css" />
+<style>
+  .home-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+  }
+  .home-header {
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    height: 56px;
+    border-bottom: 1px solid var(--border-subtle);
+    position: sticky;
+    top: 0;
+    background: rgba(13,13,13,.92);
+    backdrop-filter: blur(12px);
+    z-index: 10;
+  }
+  .home-logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .home-logo span {
+    color: var(--accent);
+    margin-left: 2px;
+  }
+  .home-hero {
+    max-width: 720px;
+    margin: 80px auto 0;
+    padding: 0 40px;
+  }
+  .home-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .home-eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+  .home-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin: 0 0 16px;
+    background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 60%, #7c6af7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .home-desc {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.8;
+    max-width: 480px;
+    margin: 0 0 28px;
+  }
+  .home-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 56px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .home-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #666;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+  }
+  .home-tag::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .home-tag.green { color: var(--green); }
+  .home-tag.blue  { color: var(--blue); }
+  .home-tag.purple { color: var(--accent); }
+  .home-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+  .home-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 20px;
+  }
+  .doc-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .doc-card {
+    display: block;
+    text-decoration: none;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    transition: border-color .2s, background .2s;
+  }
+  .doc-card:hover {
+    border-color: var(--accent-border);
+    background: var(--bg-hover);
+  }
+  .doc-card-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+  .doc-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .doc-card-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .home-notice {
+    max-width: 720px;
+    margin: 0 auto 60px;
+    padding: 0 40px;
+  }
+  .home-notice-inner {
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .home-notice-inner strong { color: var(--text-secondary); }
+  .home-footer {
+    margin-top: auto;
+    padding: 24px 40px;
+    border-top: 1px solid var(--border-subtle);
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="home-layout">
+
+  <header class="home-header">
+    <a class="home-logo" href="/">web3happened <span>docs</span></a>
+  </header>
+
+  <section class="home-hero">
+    <div class="home-eyebrow">ZMX · 内部知识库</div>
+    <h1 class="home-title">web3happened<br/>docs</h1>
+    <p class="home-desc">前端团队内部知识库，记录工程规范、技术方案与最佳实践。</p>
+    <div class="home-tags">
+      <span class="home-tag green">Nuxt 3</span>
+      <span class="home-tag blue">TypeScript</span>
+      <span class="home-tag purple">内部文档</span>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="home-section-title">文档目录</div>
+    <div class="doc-cards">
+      <a class="doc-card" href="/frontend/tracking.html">
+        <div class="doc-card-icon">📊</div>
+        <div class="doc-card-title">埋点使用指南</div>
+        <div class="doc-card-desc">Analytics Tracker 接入规范，含决策流程图与时序图。适用于 Zoomex Web / Mobile。</div>
+      </a>
+      <a class="doc-card" href="/frontend/prediction-market.html">
+        <div class="doc-card-icon">🎯</div>
+        <div class="doc-card-title">预测市场埋点规范</div>
+        <div class="doc-card-desc">预测市场全链路埋点事件清单，含 Click / Callback / Enum 完整定义。</div>
+      </a>
+    </div>
+  </section>
+
+  <div class="home-notice">
+    <div class="home-notice-inner">
+      <strong>仅限内部访问。</strong> 文档内容涉及团队技术规范与内部 SDK 接口，请勿对外传播。
+    </div>
+  </div>
+
+  <footer class="home-footer">ZMX 前端团队内部文档 · 2026</footer>
+
+</div>
+</body>
+</html>

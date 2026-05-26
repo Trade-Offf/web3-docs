@@ -1,14 +1,5 @@
-# dependencies
-node_modules/
-
-# next.js
-.next/
+# build output
 out/
-
-# env
-.env
-.env.local
-.env.*.local
 
 # misc
 .DS_Store
@@ -17,10 +8,3 @@ out/
 # debug
 npm-debug.log*
 pnpm-debug.log*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
