@@ -1,0 +1,33 @@
+{
+  "name": "web3happened-docs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.0.0",
+    "nextra": "^4.0.0",
+    "nextra-theme-docs": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "zod": "4.3.6"
+    }
+  },
+  "packageManager": "pnpm@9.1.1",
+  "engines": {
+    "node": ">=20"
+  }
+}

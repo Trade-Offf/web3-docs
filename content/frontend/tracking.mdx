@@ -1,0 +1,307 @@
+---
+title: 埋点使用指南
+description: Analytics Tracker 接入规范，含决策流程图与时序图。适用于 Zoomex Web / Mobile。
+---
+
+import { Callout, Steps } from 'nextra/components'
+
+# Analytics Tracker 使用指南
+
+<div style={{ color: '#888', fontSize: 13, marginBottom: 24 }}>
+  SDK: `@region-lib/data-finder@0.0.37` · Nuxt 3 Plugin · 更新于 2026-05-26
+</div>
+
+所有埋点能力通过 Nuxt Plugin 注入，业务侧**始终通过 `useNuxtApp().$tracker` 调用**，不要直接 import SDK 函数。
+
+```
+火山引擎 (window.collectEvent)
+    ↑
+@region-lib/data-finder (npm SDK)
+    ↑
+analytics-tracker.client.ts (Nuxt Plugin)
+    ↑
+业务代码: $tracker.* / v-tracker 指令
+```
+
+<Callout type="info">
+Plugin 文件名以 `.client.ts` 结尾，仅在浏览器端运行。SSR 阶段访问 `$tracker` 会报错，埋点代码必须放在 `onMounted` 或客户端事件处理函数中。
+</Callout>
+
+---
+
+## 方法速查
+
+| 方法 | 触发时机 | 关键参数 |
+|------|----------|----------|
+| `setTrackerInfo(options)` | 进入页面，设置公共属性 | `project_type`, `project_name` |
+| `trackPageViewCollect()` | 紧跟 setTrackerInfo，上报 PV | 无参数 |
+| `trackBtnClickCollect(options)` | 普通按钮点击 | `btn_name`, `btn_label`, + 扩展字段 |
+| `trackLinkClickCollect(options)` | 超链接点击 | 同上 |
+| `trackClickBeconCollect(options)` | 点击后立即跳转，防丢点 | 同上，内部使用 Beacon |
+| `trackCallbackCollect(options)` | 接口响应后，上报成功/失败 | `ret_code`, + 扩展字段 |
+
+---
+
+## 方法选择决策
+
+遇到埋点需求时，按以下逻辑判断应调用哪个方法：
+
+```
+需要埋点
+  │
+  ├── 进入页面？
+  │     └── setTrackerInfo() → trackPageViewCollect()
+  │
+  ├── 用户点击元素？
+  │     ├── 点击后立即跳转页面？
+  │     │     └── 是 → trackClickBeconCollect()  (sendBeacon 防丢点)
+  │     │
+  │     └── 否，留在当前页
+  │           ├── 模板无额外逻辑（纯上报）？
+  │           │     └── v-tracker 指令
+  │           └── 有业务逻辑（条件/动态传参）？
+  │                 ├── button 元素 → trackBtnClickCollect()
+  │                 └── a / link 元素 → trackLinkClickCollect()
+  │
+  └── 接口返回结果？
+        └── trackCallbackCollect()  (ret_code = 0 为成功)
+```
+
+---
+
+## 场景一：页面 PV
+
+<Steps>
+
+### 进入页面时调用 setTrackerInfo
+
+设置本次页面的公共上下文，**后续所有点击事件会自动携带这两个字段**。
+
+```ts
+onMounted(() => {
+  const { $tracker } = useNuxtApp()
+  $tracker.setTrackerInfo({
+    project_type: 'predict',       // 业务线，同一业务内固定
+    project_name: 'predictCrypto', // 页面唯一 ID
+  })
+})
+```
+
+### 调用 trackPageViewCollect 上报 PV
+
+```ts
+$tracker.trackPageViewCollect()  // 无参数
+```
+
+</Steps>
+
+<Callout type="warning">
+`setTrackerInfo` 每个页面只调一次，**不要在循环或每次按钮点击里调用**。它会覆盖全局上下文，若在点击时调用可能污染后续事件的 `project_name`。
+</Callout>
+
+---
+
+## 场景二：普通按钮点击
+
+在点击处理函数中，**先上报再执行业务逻辑**。
+
+```ts
+function handleSellClick(item: PositionItem) {
+  const { $tracker } = useNuxtApp()
+
+  $tracker.trackBtnClickCollect({
+    btn_name:     'sell_prediction_position', // 唯一 ID，英文，不随 UI 文案变
+    btn_label:    'Sell',
+    // 业务扩展字段，按需传
+    market_id:    item.marketId,
+    market_title: item.marketTitle,
+  })
+
+  openSellSheet(item) // 上报完再执行业务
+}
+```
+
+带枚举值（Yes / No 方向）：
+
+```ts
+function handleOptionClick(marketId: number, side: 'yes' | 'no') {
+  const { $tracker } = useNuxtApp()
+  $tracker.trackBtnClickCollect({
+    btn_name:  'trade_market_option',
+    btn_label: side === 'yes' ? 'Yes' : 'No',
+    market_id: marketId,
+    side,
+  })
+}
+```
+
+---
+
+## 场景三：v-tracker 指令（声明式）
+
+对于**没有额外业务逻辑**的点击元素，直接在模板绑定 `v-tracker`，内部自动监听 `click` 并调用 `trackClickCollect`。
+
+```html
+<!-- button 元素自动推断 btn_type="button" -->
+<button
+  v-tracker="{
+    btn_name:  'join_community',
+    btn_label: 'Join Community',
+  }"
+  @click="handleJoin"
+>
+  加入社区
+</button>
+
+<!-- 非 button/a 标签需手传 btn_type -->
+<div
+  v-tracker="{
+    btn_name:  'market_detail',
+    btn_label: '',
+    btn_type:  'card',
+    market_id: item.id,
+  }"
+  @click="goDetail(item)"
+/>
+```
+
+**btn_type 自动推断规则：**
+
+| 元素标签 | 推断 btn_type | 需要手传? |
+|----------|--------------|-----------|
+| `<button>` | `"button"` | 否 |
+| `<a>` | `"link"` | 否 |
+| 有 `banner_id` 字段 | `"banner"` | 否 |
+| `<div>` 等其他元素 | 空字符串 | **是** |
+
+<Callout type="default">
+**指令 vs 命令式如何选择？** 点击时只需要上报无其他逻辑 → `v-tracker`。需要条件判断、接口调用、动态传参 → 命令式 `trackBtnClickCollect`。
+</Callout>
+
+---
+
+## 场景四：跳转前防丢点（Beacon）
+
+普通 `trackBtnClickCollect` 是异步的，点击后立即跳转可能导致数据丢失。用 `trackClickBeconCollect`，底层使用 `navigator.sendBeacon` 保证发送。
+
+<Callout type="error" emoji="❌">
+**错误写法** — `trackBtnClickCollect` 是异步的，立即跳转时埋点可能未发出：
+
+```ts
+function goDetail(id: number) {
+  $tracker.trackBtnClickCollect({ btn_name: 'market_detail', btn_label: '' })
+  router.push(`/predict/detail/${id}`)
+}
+```
+</Callout>
+
+<Callout type="info" emoji="✅">
+**正确写法** — 使用 `trackClickBeconCollect` 底层调用 `sendBeacon`，保证数据发送：
+
+```ts
+function goDetail(id: number) {
+  const { $tracker } = useNuxtApp()
+  $tracker.trackClickBeconCollect({
+    btn_name:  'market_detail',
+    btn_label: '',
+    market_id: id,
+  })
+  router.push(`/predict/detail/${id}`)
+}
+```
+</Callout>
+
+---
+
+## 场景五：接口回调结果
+
+在买入/卖出等关键接口响应后，`ret_code = 0` 表示成功，其余为失败。
+
+```ts
+async function submitBuyOrder(params: IBuyParams) {
+  const { $tracker } = useNuxtApp()
+  try {
+    const res = await apiBuyPosition(params)
+    $tracker.trackCallbackCollect({
+      ret_code:      res.code,       // 0 = 成功
+      result_status: 'success',
+      market_id:     params.marketId,
+      side:          params.side,
+      amount:        params.amount,
+    })
+  } catch (err: any) {
+    $tracker.trackCallbackCollect({
+      ret_code:      err?.code ?? -1,
+      result_status: 'fail',
+      market_id:     params.marketId,
+    })
+  }
+}
+```
+
+---
+
+## 新页面完整模板
+
+推荐把埋点逻辑封装进 composable，页面文件保持干净。
+
+```ts filename="composables/predict/usePredictCrypto.ts"
+export function usePredictCrypto() {
+  // ── PV ─────────────────────────────────────────
+  onMounted(() => {
+    const { $tracker } = useNuxtApp()
+    $tracker.setTrackerInfo({ project_type: 'predict', project_name: 'predictCrypto' })
+    $tracker.trackPageViewCollect()
+  })
+
+  // ── Click（普通按钮）────────────────────────────
+  function trackCategorySwitch(category: 'crypto' | 'sports' | 'world') {
+    const { $tracker } = useNuxtApp()
+    $tracker.trackBtnClickCollect({
+      btn_name:  'switch_market_category',
+      btn_label: 'Crypto | Sports | World',
+      category,
+    })
+  }
+
+  // ── Click（跳转卡片，用 Beacon）──────────────────
+  function trackCardClick(marketId: number, title: string) {
+    const { $tracker } = useNuxtApp()
+    $tracker.trackClickBeconCollect({
+      btn_name:     'market_detail',
+      btn_label:    '',
+      market_id:    marketId,
+      market_title: title,
+    })
+  }
+
+  return { trackCategorySwitch, trackCardClick }
+}
+```
+
+```html filename="pages/predict/index.vue"
+<script setup lang="ts">
+const { trackCategorySwitch, trackCardClick } = usePredictCrypto()
+// PV 已在 composable 的 onMounted 里自动上报
+</script>
+
+<template>
+  <CategoryTab @change="trackCategorySwitch" />
+  <MarketCard
+    v-for="item in list"
+    @click="trackCardClick(item.id, item.title)"
+  />
+</template>
+```
+
+---
+
+## 常见错误
+
+| 错误写法 | 原因 | 正确做法 |
+|----------|------|----------|
+| 在 `setup()` 顶层直接调埋点 | SSR 阶段 `$tracker` 不存在，会报错 | 放进 `onMounted` 或事件处理函数中 |
+| 每次点击都调 `setTrackerInfo` | 覆盖全局上下文，污染其他事件的 `project_name` | `setTrackerInfo` 只在进入页面时调一次 |
+| 跳转前用 `trackBtnClickCollect` | 页面卸载快，异步请求可能被 cancel | 跳转场景改用 `trackClickBeconCollect` |
+| 漏传 `btn_name` | BI 无法按事件聚合，数据无意义 | `btn_name` 是最核心字段，任何 Click 事件必传 |
+| 直接 import SDK 函数调用 | 绕过 Plugin 层，未来改底层会遗漏 | 始终通过 `useNuxtApp().$tracker` 调用 |
