@@ -42,8 +42,8 @@ Cloudflare Pages 构建配置：
 
 | 配置项 | 值 |
 |---|---|
-| Build command | `mkdir -p out && cp -r public/. out/` |
-| Build output directory | `out` |
+| Build command | （空，无需构建） |
+| Build output directory | `public` |
 
 ## 添加新文档
 
