@@ -4,6 +4,7 @@ import { Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import Script from 'next/script'
 import 'nextra-theme-docs/style.css'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: {
@@ -43,7 +44,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh" dir="ltr" suppressHydrationWarning>
+    <html lang="zh" dir="ltr" suppressHydrationWarning className="dark">
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -54,8 +55,8 @@ export default async function RootLayout({
           pageMap={await getPageMap()}
           docsRepositoryBase="https://github.com/riccardo-li/web3happened-docs/blob/main"
           footer={footer}
-          darkMode
-          nextThemes={{ defaultTheme: 'dark' }}
+          darkMode={false}
+          nextThemes={{ defaultTheme: 'dark', forcedTheme: 'dark' }}
           sidebar={{ defaultMenuCollapseLevel: 1, toggleButton: true }}
           toc={{ backToTop: '回到顶部' }}
           editLink="在 GitHub 上编辑此页"
