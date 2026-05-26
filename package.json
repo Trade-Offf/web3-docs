@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "cp -r frontend out/frontend && cp -r assets out/assets",
     "start": "next start",
     "lint": "next lint"
   },
