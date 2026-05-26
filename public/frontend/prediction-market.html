@@ -293,6 +293,7 @@
           <tr><td><code>btn_type</code></td><td>string</td><td>是（Click）</td><td><code>"button"</code> | <code>"banner"</code> | <code>"link"</code> | <code>"menu"</code> | <code>"tab"</code> | <code>"card"</code></td></tr>
           <tr><td><code>btn_name</code></td><td>string</td><td>是（Click）</td><td>按钮英文 ID，用于数据聚合，<strong>不随 UI 文案变动</strong></td></tr>
           <tr><td><code>btn_label</code></td><td>string</td><td>是（Click）</td><td>按钮展示文案（英文），多态用 <code>|</code> 分隔</td></tr>
+          <tr><td><code>referrer_url</code></td><td>string</td><td>否（自动注入）</td><td>用户进入当前页面前的来源 URL，来自 <code>document.referrer</code>，SDK 自动采集，无需业务代码手动传</td></tr>
         </tbody>
       </table>
     </div>
@@ -317,7 +318,7 @@
     <!-- Click -->
     <div class="section">
       <div class="section-anchor" id="click" data-toc-group="事件清单"></div>
-      <h2>Click 事件 <span class="pill">14 个</span></h2>
+      <h2>Click 事件 <span class="pill">9 个</span></h2>
       <p>调用方式：<code>$tracker.trackBtnClickCollect({ btn_name, btn_label, ...extra })</code> 或声明式指令 <code>v-tracker</code>。<strong>卡片跳转（<code>market_detail</code>）用 <code>trackClickBeconCollect</code> 防丢点。</strong>所有 ID 字段与 API 类型一致：<code>event_id</code> 对应 <code>EventItemVo.eventId</code>，<code>market_id</code> 对应 <code>MarketSubVo.id</code>，均为 <code>string</code>。</p>
 
       <!-- 列表页（三个分类页共用同一批事件，project_name 区分上下文） -->
@@ -329,11 +330,6 @@
         <table class="api-table">
           <thead><tr><th>btn_name</th><th>业务描述</th><th>btn_type</th><th>btn_label</th><th>扩展参数</th></tr></thead>
           <tbody>
-            <tr>
-              <td><code>my_prediction_orders</code></td>
-              <td>顶部 Banner「我的预测订单」（仅 predictCrypto）</td>
-              <td>banner</td><td>My Prediction Orders</td><td>—</td>
-            </tr>
             <tr>
               <td><code>switch_market_category</code></td>
               <td>切换一级分类 Tab</td>
@@ -382,17 +378,6 @@
               <td><code>event_id: string, market_id: string, outcome: "Yes" | "No"</code></td>
             </tr>
             <tr>
-              <td><code>switch_trade_side</code></td>
-              <td>交易面板内切换买入方向</td>
-              <td>button</td><td>Yes | No</td>
-              <td><code>outcome: "Yes" | "No"</code></td>
-            </tr>
-            <tr>
-              <td><code>view_trade_rules</code></td>
-              <td>查看结算规则</td>
-              <td>link</td><td>Settlement Rules</td><td>—</td>
-            </tr>
-            <tr>
               <td><code>submit_buy_order</code></td>
               <td>点击买入按钮提交下单（对应 POST /trade/buy）</td>
               <td>button</td><td>Buy Yes | Buy No</td>
@@ -417,20 +402,12 @@
               <td><code>tab: "positions" | "settlements"</code>（分别对应 /position/list 和 /settlement/list）</td>
             </tr>
             <tr>
-              <td><code>view_position_detail</code></td><td>点击持仓行进入事件详情</td><td>PredictionAccount</td><td>card</td><td>—</td>
-              <td><code>event_id: string</code>（PositionItem.marketId 对应的事件 ID）</td>
-            </tr>
-            <tr>
               <td><code>sell_position</code></td><td>点击持仓「Sell」按钮</td><td>PredictionAccount</td><td>button</td><td>Sell</td>
               <td><code>event_id: string, market_id: string</code><br/><code>outcome: "Yes" | "No"</code>（PositionItem.outcomeLabel）</td>
             </tr>
             <tr>
               <td><code>confirm_sell_position</code></td><td>确认卖出弹窗 Confirm（对应 POST /trade/sell）</td><td>PredictionAccount</td><td>button</td><td>Confirm</td>
               <td><code>event_id: string, market_id: string</code></td>
-            </tr>
-            <tr>
-              <td><code>cancel_sell_position</code></td><td>关闭 / 取消卖出弹窗</td><td>PredictionAccount</td><td>button</td><td>Close</td>
-              <td><code>close_source: "button" | "mask"</code></td>
             </tr>
           </tbody>
         </table>
