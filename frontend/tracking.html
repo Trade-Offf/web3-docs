@@ -60,8 +60,8 @@
 
     <!-- 决策流程图 -->
     <div class="section">
-      <div class="section-anchor" id="flowchart"></div>
-      <h2 id="h-flowchart"><span class="num">1</span>方法选择决策图</h2>
+      <div class="section-anchor" id="flowchart" data-toc-group="架构速览"></div>
+      <h2><span class="num">1</span>方法选择决策图</h2>
       <p>遇到埋点需求时，按此流程判断应该调用哪个方法。</p>
 
       <div class="diagram-wrap">
@@ -145,8 +145,8 @@
 
     <!-- 时序图 -->
     <div class="section">
-      <div class="section-anchor" id="sequence"></div>
-      <h2 id="h-sequence"><span class="num">2</span>页面完整生命周期时序</h2>
+      <div class="section-anchor" id="sequence" data-toc-group="架构速览"></div>
+      <h2><span class="num">2</span>页面完整生命周期时序</h2>
       <p>一个页面从进入到操作到接口回调的完整上报流程，以及各步骤调用的方法。</p>
 
       <div class="diagram-wrap" style="padding:0;overflow:hidden">
@@ -201,8 +201,8 @@
 
     <!-- API 速查 -->
     <div class="section">
-      <div class="section-anchor" id="api"></div>
-      <h2 id="h-api"><span class="num">3</span>API 速查</h2>
+      <div class="section-anchor" id="api" data-toc-group="架构速览"></div>
+      <h2><span class="num">3</span>API 速查</h2>
       <table class="api-table">
         <thead><tr><th>方法</th><th>触发时机</th><th>关键参数</th></tr></thead>
         <tbody>
@@ -218,8 +218,8 @@
 
     <!-- 页面 PV -->
     <div class="section">
-      <div class="section-anchor" id="pageview"></div>
-      <h2 id="h-pageview"><span class="num">4</span>页面 PV 上报</h2>
+      <div class="section-anchor" id="pageview" data-toc-group="上报场景"></div>
+      <h2><span class="num">4</span>页面 PV 上报</h2>
       <p>每个页面的 <code>onMounted</code> 中，先调用 <code>setTrackerInfo</code> 设置当前页面上下文，再调用 <code>trackPageViewCollect</code> 触发 PV 事件。后续所有点击事件都会自动携带这里设置的 <code>project_type</code> 和 <code>project_name</code>。</p>
       <div class="code-block">
         <div class="code-header"><span class="code-lang">TypeScript</span><span class="code-file">pages/predict/index.vue — &lt;script setup&gt;</span></div>
@@ -246,8 +246,8 @@
 
     <!-- 按钮点击 -->
     <div class="section">
-      <div class="section-anchor" id="click"></div>
-      <h2 id="h-click"><span class="num">5</span>按钮点击上报</h2>
+      <div class="section-anchor" id="click" data-toc-group="上报场景"></div>
+      <h2><span class="num">5</span>按钮点击上报</h2>
       <p>在点击处理函数中调用 <code>trackBtnClickCollect</code>，<strong>先上报再执行业务逻辑</strong>。</p>
       <h3>基础用法</h3>
       <div class="code-block">
@@ -286,8 +286,8 @@
 
     <!-- v-tracker -->
     <div class="section">
-      <div class="section-anchor" id="directive"></div>
-      <h2 id="h-directive"><span class="num">6</span>v-tracker 指令（声明式）</h2>
+      <div class="section-anchor" id="directive" data-toc-group="上报场景"></div>
+      <h2><span class="num">6</span>v-tracker 指令（声明式）</h2>
       <p>对于<strong>没有额外业务逻辑</strong>的点击元素，直接在模板里绑定 <code>v-tracker</code> 指令，比命令式更简洁。内部自动监听 <code>click</code> 事件并调用 <code>trackClickCollect</code>。</p>
       <div class="code-block">
         <div class="code-header"><span class="code-lang">HTML Template</span></div>
@@ -331,8 +331,8 @@
 
     <!-- Beacon -->
     <div class="section">
-      <div class="section-anchor" id="beacon"></div>
-      <h2 id="h-beacon"><span class="num">7</span>跳转前防丢点（Beacon）</h2>
+      <div class="section-anchor" id="beacon" data-toc-group="上报场景"></div>
+      <h2><span class="num">7</span>跳转前防丢点（Beacon）</h2>
       <p>普通的 <code>trackBtnClickCollect</code> 是异步的。如果点击后立即跳转页面，浏览器可能在请求发出前就卸载了页面，导致数据丢失。此时用 <code>trackClickBeconCollect</code>，它底层使用 <code>navigator.sendBeacon</code> 保证发送。</p>
       <div class="code-block">
         <div class="code-header"><span class="code-lang">TypeScript</span><span class="code-file">❌ 错误写法（可能丢点）</span></div>
@@ -361,8 +361,8 @@
 
     <!-- Callback -->
     <div class="section">
-      <div class="section-anchor" id="callback"></div>
-      <h2 id="h-callback"><span class="num">8</span>接口回调结果上报</h2>
+      <div class="section-anchor" id="callback" data-toc-group="上报场景"></div>
+      <h2><span class="num">8</span>接口回调结果上报</h2>
       <p>在买入 / 卖出等关键接口响应后，用 <code>trackCallbackCollect</code> 上报操作结果，<code>ret_code = 0</code> 表示成功，其余为失败。</p>
       <div class="code-block">
         <div class="code-header"><span class="code-lang">TypeScript</span><span class="code-file">composables/predict/usePredictBuy.ts</span></div>
@@ -392,8 +392,8 @@
 
     <!-- 完整模板 -->
     <div class="section">
-      <div class="section-anchor" id="template"></div>
-      <h2 id="h-template"><span class="num">9</span>新页面完整模板</h2>
+      <div class="section-anchor" id="template" data-toc-group="参考"></div>
+      <h2><span class="num">9</span>新页面完整模板</h2>
       <p>复制以下结构，替换 <code>project_name</code> 和事件名即可。推荐把埋点逻辑封装进 composable，页面文件保持干净。</p>
       <div class="code-block">
         <div class="code-header"><span class="code-lang">TypeScript</span><span class="code-file">composables/predict/usePredictCrypto.ts</span></div>
@@ -435,8 +435,8 @@
 
     <!-- 常见错误 -->
     <div class="section">
-      <div class="section-anchor" id="errors"></div>
-      <h2 id="h-errors"><span class="num">10</span>常见错误</h2>
+      <div class="section-anchor" id="errors" data-toc-group="参考"></div>
+      <h2><span class="num">10</span>常见错误</h2>
       <table class="error-table">
         <thead><tr><th>错误写法</th><th>原因</th><th>正确做法</th></tr></thead>
         <tbody>

@@ -28,6 +28,7 @@
       sections.forEach(anchor => {
         const id = anchor.id;
         if (!id) return;
+        const group = anchor.dataset.tocGroup || null;
         // h2 可能是 anchor 的下一个兄弟，也可能在父 section 里
         let h = anchor.nextElementSibling;
         while (h && h.tagName !== 'H2' && h.tagName !== 'H3') {
@@ -38,7 +39,7 @@
           if (parent) h = parent.querySelector('h2, h3');
         }
         if (h) {
-          allItems.push({ id, text: h.textContent.replace(/^\d+\s*/, '').trim(), level: parseInt(h.tagName[1]) });
+          allItems.push({ id, text: h.textContent.replace(/^\d+\s*/, '').trim(), level: parseInt(h.tagName[1]), group });
         }
       });
     }
@@ -61,7 +62,17 @@
     title.textContent = 'ON THIS PAGE';
     container.appendChild(title);
 
+    let lastGroup = null;
     allItems.forEach(item => {
+      // 分组标签：分组名称变化时插入
+      if (item.group && item.group !== lastGroup) {
+        lastGroup = item.group;
+        const g = document.createElement('div');
+        g.className = 'toc-group';
+        g.textContent = item.group;
+        container.appendChild(g);
+      }
+
       const a = document.createElement('a');
       a.href = '#' + item.id;
       a.textContent = item.text;
