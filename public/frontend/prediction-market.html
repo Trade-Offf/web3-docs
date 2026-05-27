@@ -214,7 +214,7 @@
       <div class="hero-eyebrow">埋点专题 · 预测市场</div>
       <h1>预测市场<br/>埋点规范</h1>
       <p class="hero-desc">
-        技术侧整理版本，待与 BI 对齐确认。涵盖 <strong style="color:var(--text)">5 PV · 9 Click · 2 Callback</strong>，共 16 个有效埋点事件，字段与 API 类型对齐。
+        技术侧整理版本。涵盖 <strong style="color:var(--text)">4 PV · 15 Click · 2 Callback</strong>，共 21 个有效埋点事件，新增 platform 字段区分 web / h5 差异行为。
       </p>
       <a class="export-btn" href="../assets/predict-tracking.csv" download="predict-tracking.csv">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -223,17 +223,16 @@
       <div class="hero-meta">
         <span class="hero-tag"><code style="color:var(--syn-fn)">project_type = predict</code></span>
         <span class="hero-tag">SDK @region-lib/data-finder@0.0.37</span>
-        <span class="hero-tag">⏳ 待 BI 对齐确认</span>
-        <span class="hero-tag">更新于 2026-05-26</span>
+        <span class="hero-tag">更新于 2026-05-27</span>
       </div>
     </div>
 
     <!-- 统计 -->
     <div class="stats">
-      <div class="stat"><div class="stat-value">5</div><div class="stat-label">PageView 事件</div></div>
-      <div class="stat"><div class="stat-value">9</div><div class="stat-label">Click 事件</div></div>
+      <div class="stat"><div class="stat-value">4</div><div class="stat-label">PageView 事件</div></div>
+      <div class="stat"><div class="stat-value">15</div><div class="stat-label">Click 事件</div></div>
       <div class="stat"><div class="stat-value">2</div><div class="stat-label">Callback 事件</div></div>
-      <div class="stat"><div class="stat-value accent">16</div><div class="stat-label">总计有效事件</div></div>
+      <div class="stat"><div class="stat-value accent">21</div><div class="stat-label">总计有效事件</div></div>
     </div>
 
     <!-- 为什么这么做 -->
@@ -252,7 +251,7 @@
           </div>
           <div class="principle-card-desc">
             相同语义的事件用<strong style="color:var(--text)">参数字段区分</strong>而非拆成多条。<br/>
-            例：体育大类筛选与联赛筛选合并为 <code>switch_sport_filter</code>，通过 <code>filter_type</code> 区分层级。
+            例：体育二级大类与联赛筛选合并为 <code>switch_sport_filter</code>，通过 <code>filter_type</code> 区分层级。
           </div>
         </div>
         <div class="principle-card">
@@ -301,113 +300,226 @@
     <!-- PageView -->
     <div class="section">
       <div class="section-anchor" id="pageview" data-toc-group="事件清单"></div>
-      <h2>PageView 事件 <span class="pill">5 个</span></h2>
+      <h2>PageView 事件 <span class="pill">4 个</span></h2>
       <p>触发时机：页面 <code>onMounted</code>，先调用 <code>setTrackerInfo({ project_type, project_name })</code> 再调用 <code>trackPageViewCollect()</code>，无额外参数。</p>
+      <div class="callout info" style="margin-bottom:16px">
+        <span class="callout-icon">ℹ</span>
+        <span>加密 / 体育 / 世界三个列表页共用同一页面组件，<code>project_name</code> 由 <code>activeCategory.slug</code> 动态决定：slug 含 <code>crypto</code> → <code>predictCrypto</code>，含 <code>sports</code> → <code>predictSports</code>，含 <code>world</code> → <code>predictWorld</code>。</span>
+      </div>
       <table class="api-table">
-        <thead><tr><th>project_name</th><th>业务页面</th><th>路由（参考）</th></tr></thead>
+        <thead><tr><th>project_name</th><th>project_type</th><th>业务页面</th><th>路由（参考）</th></tr></thead>
         <tbody>
-          <tr><td><code>predictCrypto</code></td><td>加密预测市场列表页</td><td>/predict</td></tr>
-          <tr><td><code>predictSports</code></td><td>体育预测市场列表页</td><td>/predict/sports</td></tr>
-          <tr><td><code>predictWorld</code></td><td>世界预测市场列表页</td><td>/predict/world</td></tr>
-          <tr><td><code>predictDetail</code></td><td>预测市场详情页</td><td>/predict/detail/:id</td></tr>
-          <tr><td><code>PredictionAccount</code></td><td>持仓账户页</td><td>/predict/position</td></tr>
+          <tr><td><code>predictCrypto</code></td><td><code>predict</code></td><td>加密预测市场列表页</td><td>/predict (slug: crypto-*)</td></tr>
+          <tr><td><code>predictSports</code></td><td><code>predict</code></td><td>体育预测市场列表页</td><td>/predict (slug: sports-*)</td></tr>
+          <tr><td><code>predictWorld</code></td><td><code>predict</code></td><td>世界预测市场列表页</td><td>/predict (slug: world-*)</td></tr>
+          <tr><td><code>PredictionAccount</code></td><td><code>predict</code></td><td>持仓账户页</td><td>/predict/position</td></tr>
         </tbody>
       </table>
+      <div class="callout warn" style="margin-top:12px">
+        <span class="callout-icon">⚠</span>
+        <span><code>StrategyPredictWarmUp</code> 的 <code>project_type</code> 为 <code>"Strategy"</code>，与其余页面的 <code>"predict"</code> 不同，<strong>注意不要写错</strong>。</span>
+      </div>
     </div>
 
     <!-- Click -->
     <div class="section">
       <div class="section-anchor" id="click" data-toc-group="事件清单"></div>
-      <h2>Click 事件 <span class="pill">9 个</span></h2>
-      <p>调用方式：<code>$tracker.trackBtnClickCollect({ btn_name, btn_label, ...extra })</code> 或声明式指令 <code>v-tracker</code>。<strong>卡片跳转（<code>market_detail</code>）用 <code>trackClickBeconCollect</code> 防丢点。</strong>所有 ID 字段与 API 类型一致：<code>event_id</code> 对应 <code>EventItemVo.eventId</code>，<code>market_id</code> 对应 <code>MarketSubVo.id</code>，均为 <code>string</code>。</p>
+      <h2>Click 事件 <span class="pill">15 个</span></h2>
+      <p>调用方式：<code>$tracker.trackBtnClickCollect({ btn_name, btn_label, ...extra })</code>。<strong>卡片跳转（<code>market_detail</code> / <code>match_detail</code>）用 <code>trackClickBeconCollect</code> 防丢点。</strong> <code>view_trade_rules</code> 在 Web 用 <code>trackLinkClickCollect</code>（hover + 300ms 防抖），H5 用 <code>trackBtnClickCollect</code>（tap）。</p>
 
-      <!-- 列表页（三个分类页共用同一批事件，project_name 区分上下文） -->
+      <!-- 通用/导航 -->
       <div class="row-group">
         <div class="row-group-title">
-          预测列表页
-          <span class="row-group-sub">project_name: predictCrypto / predictSports / predictWorld</span>
+          列表页通用
+          <span class="row-group-sub">platform: web+h5 · project_name: 不固定（由 slug 决定）</span>
         </div>
         <table class="api-table">
-          <thead><tr><th>btn_name</th><th>业务描述</th><th>btn_type</th><th>btn_label</th><th>扩展参数</th></tr></thead>
+          <thead><tr><th>event_name</th><th>业务描述</th><th>btn_type</th><th>btn_label</th><th>扩展参数</th></tr></thead>
           <tbody>
             <tr>
               <td><code>switch_market_category</code></td>
-              <td>切换一级分类 Tab</td>
-              <td>tab</td><td>Crypto | Sports | World</td>
-              <td><code>category_slug: "crypto-assets" | "sports" | "world"</code></td>
+              <td>L1 分类 Tab 切换（Crypto / Sports / World）<br/><span style="color:var(--text-muted);font-size:11px">H5 含 slug === activeSlug 去重 guard</span></td>
+              <td>tab</td><td>slug（动态）</td>
+              <td><code>category: slug</code></td>
             </tr>
             <tr>
-              <td><code>filter_market</code></td>
-              <td>所有筛选操作（币种 / 体育大类 / 联赛 / 市场类型），通过 <code>filter_type</code> 区分</td>
-              <td>button / menu / tab</td><td>—</td>
-              <td>
-                <code>filter_type</code>：见下方枚举速查<br/>
-                <code>filter_value</code>：tag slug 或 UI 值<br/>
-                <code>category_id</code>：number（对应 <code>CategoryNode.id</code>，传给 <code>/event/list?categoryId</code>）
-              </td>
-            </tr>
-            <tr>
-              <td><code>market_detail</code></td>
-              <td>点击任意卡片进入详情（加密 / 体育 / 世界均用此事件）</td>
-              <td>card</td><td>—</td>
-              <td><code>event_id: string</code>（EventItemVo.eventId）<br/><code>event_title: string</code>（EventItemVo.title）</td>
-            </tr>
-            <tr>
-              <td><code>trade_market_option</code></td>
-              <td>点击卡片内选项（Yes/No 或体育胜平负）发起交易</td>
-              <td>button</td><td>Yes | No | Home Win | Draw | Away Win</td>
-              <td><code>event_id: string, market_id: string</code>（MarketSubVo.id）<br/><code>outcome: string</code>（outcomes 的 key，如 <code>"Yes"</code>/<code>"No"</code>/<code>"team0_win"</code>/<code>"draw"</code>/<code>"team1_win"</code>）</td>
+              <td><code>my_prediction_orders</code></td>
+              <td>点击首页 KvBanner 跳转持仓页</td>
+              <td>banner</td><td>My Prediction Orders</td>
+              <td>—</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- 详情页 -->
+      <!-- 加密列表页 -->
+      <div class="row-group">
+        <div class="row-group-title">
+          加密列表页
+          <span class="row-group-sub">project_name: predictCrypto</span>
+        </div>
+        <table class="api-table">
+          <thead><tr><th>event_name</th><th>业务描述</th><th>btn_type</th><th>btn_label</th><th>扩展参数</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>filter_crypto_asset</code></td>
+              <td>加密资产 chip 筛选<br/><span style="color:var(--text-muted);font-size:11px">watch(selectedChildId) 触发</span></td>
+              <td>button</td><td>assetSymbol（动态）</td>
+              <td><code>asset: assetSymbol</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 加密 & 世界列表页共用 -->
+      <div class="row-group">
+        <div class="row-group-title">
+          加密 &amp; 世界列表页
+          <span class="row-group-sub">project_name: predictCrypto / predictWorld</span>
+        </div>
+        <table class="api-table">
+          <thead><tr><th>event_name</th><th>业务描述</th><th>btn_type</th><th>btn_label</th><th>扩展参数</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>market_detail</code></td>
+              <td>点击 EventCard 进入详情（跳转，用 Beacon）</td>
+              <td>card</td><td>event.title（动态）</td>
+              <td><code>market_id: string</code><br/><code>market_title: string</code></td>
+            </tr>
+            <tr>
+              <td><code>trade_market_option</code></td>
+              <td>EventCard 内直接选边下单</td>
+              <td>button</td><td>Yes | No</td>
+              <td><code>market_id: string</code><br/><code>side: "yes" | "no"</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 体育列表页 -->
+      <div class="row-group">
+        <div class="row-group-title">
+          体育列表页
+          <span class="row-group-sub">project_name: predictSports</span>
+        </div>
+        <table class="api-table">
+          <thead><tr><th>event_name</th><th>业务描述</th><th>btn_type</th><th>btn_label</th><th>扩展参数</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>switch_sport_filter</code></td>
+              <td>体育二级大类 / 联赛筛选<br/><span style="color:var(--text-muted);font-size:11px">H5 L2 由 onL2Click 上报；L3 Sheet 用 skipTracking=true 互斥去重</span></td>
+              <td>menu</td><td>节点名（动态）</td>
+              <td>
+                <code>filter_type: "sport_category" | "sport_league"</code><br/>
+                <code>filter_value: node.slug</code>
+              </td>
+            </tr>
+            <tr>
+              <td><code>switch_market_type</code></td>
+              <td>体育 Games / Props Tab 切换</td>
+              <td>tab</td><td>Games | Props</td>
+              <td><code>market_type: "games" | "props"</code></td>
+            </tr>
+            <tr>
+              <td><code>match_detail</code></td>
+              <td>点击 GamesCard 进入比赛详情（跳转，用 Beacon）</td>
+              <td>card</td><td>event.title（动态）</td>
+              <td><code>market_id: string</code><br/><code>market_title: string</code></td>
+            </tr>
+            <tr>
+              <td><code>trade_match_option</code></td>
+              <td>GamesCard 胜平负按钮点击</td>
+              <td>button</td><td>Home Win | Draw | Away Win</td>
+              <td>
+                <code>match_id: event.eventId</code><br/>
+                <code>side: "home_win" | "draw" | "away_win"</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 预测市场详情页 -->
       <div class="row-group">
         <div class="row-group-title">
           预测市场详情页
           <span class="row-group-sub">project_name: predictDetail</span>
         </div>
         <table class="api-table">
-          <thead><tr><th>btn_name</th><th>业务描述</th><th>btn_type</th><th>btn_label</th><th>扩展参数</th></tr></thead>
+          <thead><tr><th>event_name</th><th>platform</th><th>业务描述</th><th>btn_type</th><th>btn_label</th><th>扩展参数</th></tr></thead>
           <tbody>
             <tr>
-              <td><code>trade_market_option</code></td>
-              <td>详情页选项列表选择方向</td>
-              <td>button</td><td>Yes | No</td>
-              <td><code>event_id: string, market_id: string, outcome: "Yes" | "No"</code></td>
+              <td><code>switch_trade_side</code></td>
+              <td>web+h5</td>
+              <td>下单面板切换方向（普通 + Games 市场均触发）</td>
+              <td>button</td><td>Yes | No | Draw</td>
+              <td><code>side: "yes" | "no" | "draw"</code></td>
             </tr>
             <tr>
-              <td><code>submit_buy_order</code></td>
-              <td>点击买入按钮提交下单（对应 POST /trade/buy）</td>
+              <td><code>buy_position</code></td>
+              <td>web+h5</td>
+              <td>点击下单提交按钮</td>
               <td>button</td><td>Buy Yes | Buy No</td>
-              <td><code>event_id: string, market_id: string, outcome: "Yes" | "No"</code><br/><code>usdt_amount: string</code>（BuyOrderBody.usdtAmount，单位 USDT，最小 5）</td>
+              <td><code>market_id: string</code><br/><code>side: "yes" | "no"</code><br/><code>amount: string</code></td>
+            </tr>
+            <tr>
+              <td><code>view_trade_rules</code></td>
+              <td><strong>web</strong></td>
+              <td>查看结算规则<br/><span style="color:var(--text-muted);font-size:11px">mouseenter 触发，300ms 防抖，用 trackLinkClickCollect</span></td>
+              <td>link</td><td>Settlement Rules</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><code>view_trade_rules</code></td>
+              <td><strong>h5</strong></td>
+              <td>查看结算规则<br/><span style="color:var(--text-muted);font-size:11px">tap 触发，用 trackBtnClickCollect</span></td>
+              <td>link</td><td>Settlement Rules</td>
+              <td>—</td>
             </tr>
           </tbody>
         </table>
+        <div class="inline-callout" style="margin-top:10px">
+          <span class="inline-callout-icon">⚠</span>
+          <span><code>view_trade_rules</code> 在 web / h5 触发方式不同：web 为 <strong>hover（mouseenter）</strong> + 300ms 防抖，避免快速划过重复上报；h5 为 <strong>点击</strong>触发。</span>
+        </div>
       </div>
 
       <!-- 持仓账户页 -->
       <div class="row-group">
         <div class="row-group-title">
           持仓账户页
-          <span class="row-group-sub">project_name: PredictionAccount（导航入口为 Assets）</span>
+          <span class="row-group-sub">project_name: PredictionAccount</span>
         </div>
         <table class="api-table">
-          <thead><tr><th>btn_name</th><th>业务描述</th><th>project_name</th><th>btn_type</th><th>btn_label</th><th>扩展参数</th></tr></thead>
+          <thead><tr><th>event_name</th><th>platform</th><th>业务描述</th><th>btn_type</th><th>btn_label</th><th>扩展参数</th></tr></thead>
           <tbody>
-            <tr><td><code>open_prediction_account</code></td><td>侧边导航进入预测账户</td><td>Assets</td><td>menu</td><td>Prediction Account</td><td>—</td></tr>
             <tr>
-              <td><code>switch_position_tab</code></td><td>切换持仓 / 已结算 Tab</td><td>PredictionAccount</td><td>tab</td><td>Positions | Settlements</td>
-              <td><code>tab: "positions" | "settlements"</code>（分别对应 /position/list 和 /settlement/list）</td>
+              <td><code>switch_prediction_position_tab</code></td>
+              <td>web+h5</td>
+              <td>切换持仓 / 已结算 Tab</td>
+              <td>tab</td><td>Current Holdings | Settled Events</td>
+              <td><code>tab: "current_holdings" | "settled_events"</code></td>
             </tr>
             <tr>
-              <td><code>sell_position</code></td><td>点击持仓「Sell」按钮</td><td>PredictionAccount</td><td>button</td><td>Sell</td>
-              <td><code>event_id: string, market_id: string</code><br/><code>outcome: "Yes" | "No"</code>（PositionItem.outcomeLabel）</td>
+              <td><code>sell_prediction_position</code></td>
+              <td>web+h5</td>
+              <td>点击持仓列表中的 Sell 按钮</td>
+              <td>button</td><td>Sell</td>
+              <td><code>market_id: string</code><br/><code>market_title: string</code></td>
             </tr>
             <tr>
-              <td><code>confirm_sell_position</code></td><td>确认卖出弹窗 Confirm（对应 POST /trade/sell）</td><td>PredictionAccount</td><td>button</td><td>Confirm</td>
-              <td><code>event_id: string, market_id: string</code></td>
+              <td><code>cancel_sell_position</code></td>
+              <td><strong>web</strong></td>
+              <td>关闭卖出弹窗<br/><span style="color:var(--text-muted);font-size:11px">关闭按钮 vs 蒙层由 _suppressNextHide 状态机区分</span></td>
+              <td>button</td><td>Close</td>
+              <td><code>close_source: "button" | "mask"</code></td>
+            </tr>
+            <tr>
+              <td><code>cancel_sell_position</code></td>
+              <td><strong>h5</strong></td>
+              <td>关闭卖出 SellSheet（取消 / 蒙层统一路径）</td>
+              <td>button</td><td>Close</td>
+              <td><code>close_source: "mask"</code>（固定值）</td>
             </tr>
           </tbody>
         </table>
@@ -418,33 +530,30 @@
     <div class="section">
       <div class="section-anchor" id="callback" data-toc-group="事件清单"></div>
       <h2>Callback 事件 <span class="pill">2 个</span></h2>
-      <p>调用方式：<code>$tracker.trackCallbackCollect({ ret_code, ...extra })</code>，在 <code>POST /trade/buy</code> / <code>POST /trade/sell</code> 响应后触发。<code>ret_code = 0</code> 表示成功；<code>order_status</code> 取自 <code>BuyOrderResult.status</code>。</p>
+      <p>调用方式：<code>$tracker.trackCallbackCollect({ ret_code, ...extra })</code>，在 <code>POST /trade/buy</code> / <code>POST /trade/sell</code> 响应后触发。<code>ret_code = 0</code> 表示成功，其余为失败，同步写入 <code>result_status: "success" | "fail"</code> 方便 BI 直接筛选。</p>
       <table class="api-table">
-        <thead><tr><th>事件</th><th>触发时机</th><th>project_name</th><th>ret_code</th><th>扩展参数</th></tr></thead>
+        <thead><tr><th>event_name</th><th>触发时机 / 来源文件</th><th>project_name</th><th>ret_code</th><th>扩展参数</th></tr></thead>
         <tbody>
           <tr>
-            <td>买入下单结果</td>
-            <td>POST /trade/buy 响应后</td>
+            <td><code>buy_order_result</code></td>
+            <td>POST /trade/buy 响应后<br/><span style="color:var(--text-muted);font-size:11px">usePredictPlaceOrder.ts</span></td>
             <td><code>predictDetail</code></td>
             <td>接口返回码（0=成功）</td>
             <td>
-              <code>event_id: string</code>（EventItemVo.eventId）<br/>
-              <code>market_id: string</code>（MarketSubVo.id）<br/>
-              <code>outcome: "Yes" | "No"</code><br/>
-              <code>usdt_amount: string</code>（BuyOrderBody.usdtAmount，单位 USDT）<br/>
-              <code>order_status: "NEW" | "CANCELLED" | "FAILED" | "SUBMITTING"</code>（BuyOrderResult.status）
+              <code>market_id: string</code><br/>
+              <code>side: "yes" | "no"</code><br/>
+              <code>amount: string</code><br/>
+              <code>result_status: "success" | "fail"</code>
             </td>
           </tr>
           <tr>
-            <td>卖出下单结果</td>
-            <td>POST /trade/sell 响应后</td>
+            <td><code>sell_order_result</code></td>
+            <td>POST /trade/sell 响应后<br/><span style="color:var(--text-muted);font-size:11px">usePredictPosition.ts</span></td>
             <td><code>PredictionAccount</code></td>
             <td>接口返回码（0=成功）</td>
             <td>
-              <code>event_id: string</code><br/>
               <code>market_id: string</code><br/>
-              <code>outcome: "Yes" | "No"</code>（PositionItem.outcomeLabel）<br/>
-              <code>order_status: "NEW" | "CANCELLED" | "FAILED" | "SUBMITTING"</code>
+              <code>result_status: "success" | "fail"</code>
             </td>
           </tr>
         </tbody>
@@ -461,11 +570,11 @@
           <table class="api-table" style="border:none;border-radius:0">
             <thead><tr><th>值</th><th>适用事件</th></tr></thead>
             <tbody>
-              <tr><td><code>button</code></td><td>trade_market_option / switch_trade_side / submit_buy_order / sell_position / confirm / cancel</td></tr>
+              <tr><td><code>button</code></td><td>filter_crypto_asset / trade_market_option / trade_match_option / switch_trade_side / buy_position / sell_prediction_position / cancel_sell_position</td></tr>
               <tr><td><code>banner</code></td><td>my_prediction_orders</td></tr>
-              <tr><td><code>tab</code></td><td>switch_market_category / switch_position_tab / filter_market（market_type）</td></tr>
-              <tr><td><code>menu</code></td><td>open_prediction_account / filter_market（sport_category / sport_league）</td></tr>
-              <tr><td><code>card</code></td><td>market_detail / view_position_detail</td></tr>
+              <tr><td><code>tab</code></td><td>switch_market_category / switch_market_type / switch_prediction_position_tab</td></tr>
+              <tr><td><code>menu</code></td><td>switch_sport_filter</td></tr>
+              <tr><td><code>card</code></td><td>market_detail / match_detail</td></tr>
               <tr><td><code>link</code></td><td>view_trade_rules</td></tr>
             </tbody>
           </table>
@@ -474,75 +583,66 @@
         <div class="enum-card">
           <div class="enum-card-header">project_name 枚举</div>
           <table class="api-table" style="border:none;border-radius:0">
-            <thead><tr><th>值</th><th>对应页面 / 路由</th></tr></thead>
+            <thead><tr><th>值</th><th>project_type</th><th>对应页面</th></tr></thead>
             <tbody>
-              <tr><td><code>predictCrypto</code></td><td>加密预测列表 /predict</td></tr>
-              <tr><td><code>predictSports</code></td><td>体育预测列表 /predict/sports</td></tr>
-              <tr><td><code>predictWorld</code></td><td>世界预测列表 /predict/world</td></tr>
-              <tr><td><code>predictDetail</code></td><td>预测市场详情 /predict/detail/:id</td></tr>
-              <tr><td><code>PredictionAccount</code></td><td>持仓账户页 /predict/position</td></tr>
-              <tr><td><code>Assets</code></td><td>侧边资产导航（open_prediction_account 来源）</td></tr>
+              <tr><td><code>predictCrypto</code></td><td><code>predict</code></td><td>加密预测列表</td></tr>
+              <tr><td><code>predictSports</code></td><td><code>predict</code></td><td>体育预测列表</td></tr>
+              <tr><td><code>predictWorld</code></td><td><code>predict</code></td><td>世界预测列表</td></tr>
+              <tr><td><code>predictDetail</code></td><td><code>predict</code></td><td>预测市场详情页（下单面板）</td></tr>
+              <tr><td><code>PredictionAccount</code></td><td><code>predict</code></td><td>持仓账户页</td></tr>
             </tbody>
           </table>
         </div>
 
         <div class="enum-card">
-          <div class="enum-card-header">outcome 枚举（取自 API MarketSubVo.outcomes key）</div>
+          <div class="enum-card-header">side 枚举（各事件的方向字段）</div>
           <table class="api-table" style="border:none;border-radius:0">
-            <thead><tr><th>市场类型</th><th>outcome 可选值</th><th>API 来源</th></tr></thead>
+            <thead><tr><th>事件</th><th>side 可选值</th></tr></thead>
             <tbody>
-              <tr><td>加密 / 世界预测</td><td><code>"Yes"</code> | <code>"No"</code></td><td>outcomes Record 的 key；PositionItem.outcomeLabel</td></tr>
-              <tr><td>体育 moneyline</td><td><code>"team0_win"</code> | <code>"draw"</code> | <code>"team1_win"</code></td><td>MarketSubVo.wdlSlot</td></tr>
-              <tr><td>tab（持仓页）</td><td><code>"positions"</code> | <code>"settlements"</code></td><td>对应 /position/list 与 /settlement/list</td></tr>
+              <tr><td><code>trade_market_option</code>（加密/世界）</td><td><code>"yes"</code> | <code>"no"</code></td></tr>
+              <tr><td><code>switch_trade_side</code></td><td><code>"yes"</code> | <code>"no"</code> | <code>"draw"</code></td></tr>
+              <tr><td><code>buy_position</code></td><td><code>"yes"</code> | <code>"no"</code></td></tr>
+              <tr><td><code>trade_match_option</code>（体育）</td><td><code>"home_win"</code> | <code>"draw"</code> | <code>"away_win"</code></td></tr>
             </tbody>
           </table>
         </div>
 
         <div class="enum-card">
-          <div class="enum-card-header">order_status 枚举（Callback 用，取自 BuyOrderResult.status）</div>
+          <div class="enum-card-header">result_status 枚举（Callback 用）</div>
           <table class="api-table" style="border:none;border-radius:0">
             <thead><tr><th>值</th><th>含义</th></tr></thead>
             <tbody>
-              <tr><td><code>"NEW"</code></td><td>订单已创建，正在处理</td></tr>
-              <tr><td><code>"SUBMITTING"</code></td><td>正在提交到 CLOB</td></tr>
-              <tr><td><code>"PENDING_FUNDING"</code></td><td>等待资金划转</td></tr>
-              <tr><td><code>"CANCELLED"</code></td><td>已取消（含部分成交后取消）</td></tr>
-              <tr><td><code>"FAILED"</code></td><td>订单失败</td></tr>
+              <tr><td><code>"success"</code></td><td>接口返回 ret_code = 0，下单成功</td></tr>
+              <tr><td><code>"fail"</code></td><td>接口返回非 0 或抛出异常</td></tr>
             </tbody>
           </table>
         </div>
 
         <div class="enum-card" style="grid-column: 1 / -1">
-          <div class="enum-card-header">filter_market 枚举（filter_type + filter_value + category_id，来自 /categories API）</div>
+          <div class="enum-card-header">筛选事件枚举（filter_crypto_asset / switch_sport_filter / switch_market_type）</div>
           <table class="api-table" style="border:none;border-radius:0">
-            <thead><tr><th>filter_type</th><th>含义</th><th>filter_value（tag slug）</th><th>category_id</th><th>适用页面</th></tr></thead>
+            <thead><tr><th>event_name</th><th>参数</th><th>可选值</th><th>适用页面</th></tr></thead>
             <tbody>
               <tr>
-                <td><code>"crypto_asset"</code></td>
-                <td>加密币种筛选</td>
-                <td><code>"bitcoin"</code> | <code>"ethereum"</code> | <code>"solana"</code> | <code>"ripple"</code> | <code>"micro-strategy"</code></td>
-                <td>101 / 102 / 103 / 104 / 105</td>
+                <td><code>filter_crypto_asset</code></td>
+                <td><code>asset</code></td>
+                <td>assetSymbol（动态取子分类 slug，如 <code>bitcoin</code> / <code>ethereum</code> / <code>solana</code> / <code>ripple</code> / <code>micro-strategy</code>）</td>
                 <td>predictCrypto</td>
               </tr>
               <tr>
-                <td><code>"sport_category"</code></td>
-                <td>体育大类切换（L2）</td>
-                <td><code>"world-cup"</code> | <code>"football"</code></td>
-                <td>301 / 302</td>
-                <td>predictSports</td>
+                <td rowspan="2"><code>switch_sport_filter</code></td>
+                <td><code>filter_type: "sport_category"</code><br/><code>filter_value: node.slug</code></td>
+                <td><code>"world-cup"</code> | <code>"football"</code>（L2 大类）</td>
+                <td rowspan="2">predictSports</td>
               </tr>
               <tr>
-                <td><code>"sport_league"</code></td>
-                <td>联赛切换（L3，football 子项）</td>
-                <td><code>"premier-league"</code> | <code>"champions-league"</code> | <code>"la-liga"</code> | <code>"ligue1"</code> | <code>"serie-a"</code> | <code>"mls"</code> | <code>"bundesliga"</code></td>
-                <td>30201–30207</td>
-                <td>predictSports</td>
+                <td><code>filter_type: "sport_league"</code><br/><code>filter_value: node.slug</code></td>
+                <td><code>"premier-league"</code> | <code>"champions-league"</code> | <code>"la-liga"</code> | <code>"ligue1"</code> | <code>"serie-a"</code> | <code>"mls"</code> | <code>"bundesliga"</code>（L3 联赛）</td>
               </tr>
               <tr>
-                <td><code>"market_type"</code></td>
-                <td>体育市场类型 Tab（Games/Props）</td>
+                <td><code>switch_market_type</code></td>
+                <td><code>market_type</code></td>
                 <td><code>"games"</code> | <code>"props"</code></td>
-                <td>—（UI Tab，不传 categoryId）</td>
                 <td>predictSports</td>
               </tr>
             </tbody>

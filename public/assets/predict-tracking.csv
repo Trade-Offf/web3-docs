@@ -1,24 +1,24 @@
-event_type,project_name,event_name,page,btn_type,btn_label,extra_params,notes
-PageView,predictCrypto,,加密预测市场列表页,,,,setTrackerInfo + trackPageViewCollect
-PageView,predictSports,,体育预测市场列表页,,,,setTrackerInfo + trackPageViewCollect
-PageView,predictWorld,,世界预测市场列表页,,,,setTrackerInfo + trackPageViewCollect
-PageView,predictDetail,,预测市场详情页,,,,setTrackerInfo + trackPageViewCollect
-PageView,PredictionAccount,,持仓账户页,,,,setTrackerInfo + trackPageViewCollect
-Click,predictCrypto,switch_market_category,加密预测市场列表页,tab,Crypto | Sports | World,"category_slug: ""crypto-assets""|""sports""|""world""",切换一级分类 Tab
-Click,predictCrypto,filter_market,加密预测市场列表页,button,,"filter_type: ""crypto_asset""; filter_value: slug; category_id: number","加密币种筛选; filter_value 枚举: bitcoin/ethereum/solana/ripple/micro-strategy; category_id: 101-105"
-Click,predictCrypto,market_detail,加密预测市场列表页,card,,"event_id: string, event_title: string",点击卡片进入详情（trackClickBeconCollect 防丢点）
-Click,predictCrypto,trade_market_option,加密预测市场列表页,button,Yes | No,"event_id: string, market_id: string, outcome: ""Yes""|""No""",点击卡片内选项发起交易
-Click,predictSports,filter_market,体育预测市场列表页,menu / tab,,"filter_type: ""sport_category""|""sport_league""|""market_type""; filter_value: slug or ""games""|""props""; category_id: number","sport_category: 301/302; sport_league: 30201-30207; market_type 无 category_id"
-Click,predictSports,market_detail,体育预测市场列表页,card,,"event_id: string, event_title: string",点击体育/比赛卡片进入详情（trackClickBeconCollect）
-Click,predictSports,trade_market_option,体育预测市场列表页,button,Home Win | Draw | Away Win,"event_id: string, market_id: string, outcome: ""team0_win""|""draw""|""team1_win""",体育 moneyline 投注选项（wdlSlot 对应值）
-Click,predictWorld,filter_market,世界预测市场列表页,button,,"filter_type: ""world_topic""; filter_value: slug; category_id: number","filter_value 枚举: trump/fed-interest-rate/macro-indicators/inflation; category_id: 501-504"
-Click,predictWorld,market_detail,世界预测市场列表页,card,,"event_id: string, event_title: string",点击世界预测卡片进入详情（trackClickBeconCollect）
-Click,predictWorld,trade_market_option,世界预测市场列表页,button,Yes | No,"event_id: string, market_id: string, outcome: ""Yes""|""No""",世界预测卡片内 Yes/No
-Click,predictDetail,trade_market_option,预测市场详情页,button,Yes | No,"event_id: string, market_id: string, outcome: ""Yes""|""No""",详情页选项列表选择方向
-Click,predictDetail,submit_buy_order,预测市场详情页,button,Buy Yes | Buy No,"event_id: string, market_id: string, outcome: ""Yes""|""No"", usdt_amount: string",提交买入下单（对应 POST /trade/buy）
-Click,Assets,open_prediction_account,持仓账户页,menu,Prediction Account,,侧边导航进入预测账户
-Click,PredictionAccount,switch_position_tab,持仓账户页,tab,Positions | Settlements,"tab: ""positions""|""settlements""",切换持仓/已结算 Tab（对应 /position/list 与 /settlement/list）
-Click,PredictionAccount,sell_position,持仓账户页,button,Sell,"event_id: string, market_id: string, outcome: ""Yes""|""No""",点击持仓「Sell」按钮（outcomeLabel 来自 PositionItem）
-Click,PredictionAccount,confirm_sell_position,持仓账户页,button,Confirm,"event_id: string, market_id: string",确认卖出弹窗（对应 POST /trade/sell）
-Callback,predictDetail,买入下单结果,,,,,"event_id: string; market_id: string; outcome: ""Yes""|""No""; usdt_amount: string; order_status: ""NEW""|""CANCELLED""|""FAILED""|""SUBMITTING""",POST /trade/buy 响应后触发; ret_code=0 为成功
-Callback,PredictionAccount,卖出下单结果,,,,,"event_id: string; market_id: string; outcome: ""Yes""|""No""; order_status: ""NEW""|""CANCELLED""|""FAILED""|""SUBMITTING""",POST /trade/sell 响应后触发; ret_code=0 为成功
+event_type,platform,project_name,event_name,page,btn_type,btn_label,extra_params,notes
+PageView,web+h5,predictCrypto,,加密预测市场列表页,,,"project_type: predict; project_name 由 activeCategory.slug 动态决定: slug 含 crypto → predictCrypto"
+PageView,web+h5,predictSports,,体育预测市场列表页,,,"project_type: predict; slug 含 sports → predictSports"
+PageView,web+h5,predictWorld,,世界预测市场列表页,,,"project_type: predict; slug 含 world → predictWorld"
+PageView,web+h5,PredictionAccount,,持仓账户页,,,"project_type: predict; onMounted 触发"
+Click,web+h5,,switch_market_category,列表页,tab,slug,"btn_label: slug; btn_type: tab; category: slug","L1 分类 Tab 切换; H5 含重复点击去重 guard（slug === activeSlug 时跳过）"
+Click,web+h5,,my_prediction_orders,列表首页 KvBanner,banner,My Prediction Orders,"btn_type: banner","点击 KvBanner 跳转持仓页"
+Click,web+h5,predictCrypto,filter_crypto_asset,加密列表页,button,assetSymbol,"btn_label: assetSymbol; btn_type: button; asset: assetSymbol","加密资产 chip 筛选; watch(selectedChildId) 触发"
+Click,web+h5,predictSports,switch_sport_filter,体育列表页,menu,分组/联赛名,"btn_label: node名; btn_type: menu; filter_type: sport_category|sport_league; filter_value: node.slug","体育二级/联赛筛选; H5 L2 由 onL2Click 上报，L3 Sheet 通过 skipTracking=true 互斥避免重复"
+Click,web+h5,predictSports,switch_market_type,体育列表页,tab,Games | Props,"btn_label: Games/Props; btn_type: tab; market_type: games|props","体育 Games/Props Tab 切换"
+Click,web+h5,,market_detail,加密/世界列表页,card,event.title,"btn_label: market 标题; btn_type: card; market_id; market_title","点击 EventCard 进入详情"
+Click,web+h5,,trade_market_option,加密/世界列表页,button,Yes | No,"btn_label: side; btn_type: button; market_id; side: yes|no","EventCard 内直接选边下单"
+Click,web+h5,predictSports,match_detail,体育列表页,card,event.title,"btn_label: event.title; btn_type: card; market_id; market_title","点击 GamesCard 进入详情"
+Click,web+h5,predictSports,trade_match_option,体育列表页,button,Home Win | Draw | Away Win,"btn_label: Home Win/Draw/Away Win; btn_type: button; match_id: event.eventId; side: home_win|draw|away_win","GamesCard 胜平负按钮点击"
+Click,web+h5,predictDetail,switch_trade_side,预测市场详情页,button,Yes | No | Draw,"btn_label: side; btn_type: button; project_type: predict; project_name: predictDetail; side: yes|no|draw","下单面板切换交易方向（普通市场 + Games 市场均触发）"
+Click,web+h5,predictDetail,buy_position,预测市场详情页,button,Buy Yes | Buy No,"btn_label: Buy Yes/No; btn_type: button; project_type: predict; project_name: predictDetail; market_id; side; amount","点击下单提交按钮"
+Click,web,predictDetail,view_trade_rules,预测市场详情页（web）,link,Settlement Rules,"btn_label: Settlement Rules; btn_type: link; project_type: predict; project_name: predictDetail","Web: hover 触发，300ms 防抖（mouseenter 间隔 < 300ms 不重复上报）"
+Click,h5,predictDetail,view_trade_rules,预测市场详情页（h5）,link,Settlement Rules,"btn_label: Settlement Rules; btn_type: link; project_type: predict; project_name: predictDetail","H5: 点击触发"
+Click,web+h5,PredictionAccount,switch_prediction_position_tab,持仓账户页,tab,Current Holdings | Settled Events,"btn_label: Current Holdings/Settled Events; btn_type: tab; tab: current_holdings|settled_events","切换持仓/已结算 Tab"
+Click,web+h5,PredictionAccount,sell_prediction_position,持仓账户页,button,Sell,"btn_label: Sell; btn_type: button; market_id; market_title","点击持仓列表中的 Sell 按钮"
+Click,web,PredictionAccount,cancel_sell_position,持仓账户页（web）,button,Close,"btn_label: Close; btn_type: button; close_source: button|mask","Web: 关闭按钮 → close_source=button; 蒙层点击 → close_source=mask（由 _suppressNextHide 状态机区分）"
+Click,h5,PredictionAccount,cancel_sell_position,持仓账户页（h5）,button,Close,"btn_label: Close; btn_type: button; close_source: mask","H5: SellSheet 取消/蒙层统一路径，close_source 固定为 mask"
+Callback,web+h5,predictDetail,buy_order_result,,,,"ret_code: 0|1; project_type: predict; project_name: predictDetail; market_id; side; amount; result_status: success|fail","POST /trade/buy 响应后触发; usePredictPlaceOrder.ts"
+Callback,web+h5,PredictionAccount,sell_order_result,,,,"ret_code: 0|1; project_type: predict; project_name: PredictionAccount; market_id; result_status: success|fail","POST /trade/sell 响应后触发; usePredictPosition.ts"
