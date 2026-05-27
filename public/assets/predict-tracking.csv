@@ -14,8 +14,6 @@ Click,web+h5,predictSports,match_detail,体育列表页,card,event.title,"btn_la
 Click,web+h5,predictSports,trade_match_option,体育列表页,button,Home Win | Draw | Away Win,"btn_label: Home Win/Draw/Away Win; btn_type: button; match_id: event.eventId; side: home_win|draw|away_win","GamesCard 胜平负按钮点击"
 Click,web+h5,predictDetail,switch_trade_side,预测市场详情页,button,Yes | No | Draw,"btn_label: side; btn_type: button; project_type: predict; project_name: predictDetail; side: yes|no|draw","下单面板切换交易方向（普通市场 + Games 市场均触发）"
 Click,web+h5,predictDetail,buy_position,预测市场详情页,button,Buy Yes | Buy No,"btn_label: Buy Yes/No; btn_type: button; project_type: predict; project_name: predictDetail; market_id; side; amount","点击下单提交按钮"
-Click,web,predictDetail,view_trade_rules,预测市场详情页（web）,link,Settlement Rules,"btn_label: Settlement Rules; btn_type: link; project_type: predict; project_name: predictDetail","Web: hover 触发，300ms 防抖（mouseenter 间隔 < 300ms 不重复上报）"
-Click,h5,predictDetail,view_trade_rules,预测市场详情页（h5）,link,Settlement Rules,"btn_label: Settlement Rules; btn_type: link; project_type: predict; project_name: predictDetail","H5: 点击触发"
 Click,web+h5,PredictionAccount,switch_prediction_position_tab,持仓账户页,tab,Current Holdings | Settled Events,"btn_label: Current Holdings/Settled Events; btn_type: tab; tab: current_holdings|settled_events","切换持仓/已结算 Tab"
 Click,web+h5,PredictionAccount,sell_prediction_position,持仓账户页,button,Sell,"btn_label: Sell; btn_type: button; market_id; market_title","点击持仓列表中的 Sell 按钮"
 Click,web,PredictionAccount,cancel_sell_position,持仓账户页（web）,button,Close,"btn_label: Close; btn_type: button; close_source: button|mask","Web: 关闭按钮 → close_source=button; 蒙层点击 → close_source=mask（由 _suppressNextHide 状态机区分）"

@@ -284,7 +284,7 @@
       <div class="hero-eyebrow">埋点专题 · 预测市场</div>
       <h1>预测市场<br/>埋点规范</h1>
       <p class="hero-desc">
-        技术侧整理版本。涵盖 <strong style="color:var(--text)">4 PV · 15 Click · 2 Callback</strong>，共 21 个有效埋点事件，新增 platform 字段区分 web / h5 差异行为。
+        技术侧整理版本。涵盖 <strong style="color:var(--text)">4 PV · 14 Click · 2 Callback</strong>，共 20 个有效埋点事件，新增 platform 字段区分 web / h5 差异行为。
       </p>
       <a class="export-btn" href="../assets/predict-tracking.csv" download="predict-tracking.csv">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -300,9 +300,9 @@
     <!-- 统计 -->
     <div class="stats">
       <div class="stat"><div class="stat-value">4</div><div class="stat-label">PageView 事件</div></div>
-      <div class="stat"><div class="stat-value">15</div><div class="stat-label">Click 事件</div></div>
+      <div class="stat"><div class="stat-value">14</div><div class="stat-label">Click 事件</div></div>
       <div class="stat"><div class="stat-value">2</div><div class="stat-label">Callback 事件</div></div>
-      <div class="stat"><div class="stat-value accent">21</div><div class="stat-label">总计有效事件</div></div>
+      <div class="stat"><div class="stat-value accent">20</div><div class="stat-label">总计有效事件</div></div>
     </div>
 
     <!-- 为什么这么做 -->
@@ -394,8 +394,8 @@
     <!-- Click -->
     <div class="section">
       <div class="section-anchor" id="click" data-toc-group="事件清单"></div>
-      <h2>Click 事件 <span class="pill">15 个</span></h2>
-      <p>调用方式：<code>$tracker.trackBtnClickCollect({ btn_name, btn_label, ...extra })</code>。<strong>卡片跳转（<code>market_detail</code> / <code>match_detail</code>）用 <code>trackClickBeconCollect</code> 防丢点。</strong> <code>view_trade_rules</code> 在 Web 用 <code>trackLinkClickCollect</code>（hover + 300ms 防抖），H5 用 <code>trackBtnClickCollect</code>（tap）。</p>
+      <h2>Click 事件 <span class="pill">14 个</span></h2>
+      <p>调用方式：<code>$tracker.trackBtnClickCollect({ btn_name, btn_label, ...extra })</code>。<strong>卡片跳转（<code>market_detail</code> / <code>match_detail</code>）用 <code>trackClickBeconCollect</code> 防丢点。</strong></p>
 
       <!-- 通用/导航 -->
       <div class="row-group">
@@ -532,26 +532,8 @@
               <td>button</td><td>Buy Yes | Buy No</td>
               <td><code>market_id: string</code><br/><code>side: "yes" | "no"</code><br/><code>amount: string</code></td>
             </tr>
-            <tr>
-              <td><code>view_trade_rules</code></td>
-              <td><strong>web</strong></td>
-              <td>查看结算规则<br/><span style="color:var(--text-muted);font-size:11px">mouseenter 触发，300ms 防抖，用 trackLinkClickCollect</span></td>
-              <td>link</td><td>Settlement Rules</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td><code>view_trade_rules</code></td>
-              <td><strong>h5</strong></td>
-              <td>查看结算规则<br/><span style="color:var(--text-muted);font-size:11px">tap 触发，用 trackBtnClickCollect</span></td>
-              <td>link</td><td>Settlement Rules</td>
-              <td>—</td>
-            </tr>
           </tbody>
         </table>
-        <div class="inline-callout" style="margin-top:10px">
-          <span class="inline-callout-icon">⚠</span>
-          <span><code>view_trade_rules</code> 在 web / h5 触发方式不同：web 为 <strong>hover（mouseenter）</strong> + 300ms 防抖，避免快速划过重复上报；h5 为 <strong>点击</strong>触发。</span>
-        </div>
       </div>
 
       <!-- 持仓账户页 -->
@@ -645,7 +627,6 @@
               <tr><td><code>tab</code></td><td>switch_market_category / switch_market_type / switch_prediction_position_tab</td></tr>
               <tr><td><code>menu</code></td><td>switch_sport_filter</td></tr>
               <tr><td><code>card</code></td><td>market_detail / match_detail</td></tr>
-              <tr><td><code>link</code></td><td>view_trade_rules</td></tr>
             </tbody>
           </table>
         </div>
@@ -931,18 +912,6 @@
             <td><code>project_name: predictDetail</code>，<code>market_id</code>，<code>side</code>，<code>amount</code></td>
           </tr>
           <tr>
-            <td><span class="tc-badge tc-c">C-13</span></td>
-            <td><strong>Web：</strong>鼠标悬停「Settlement Rules」文字</td>
-            <td><code>view_trade_rules</code></td>
-            <td><code>project_name: predictDetail</code>，<code>btn_type: link</code></td>
-          </tr>
-          <tr>
-            <td><span class="tc-badge tc-c">C-14</span></td>
-            <td><strong>H5：</strong>点击「Settlement Rules」文字</td>
-            <td><code>view_trade_rules</code></td>
-            <td><code>project_name: predictDetail</code>，<code>btn_type: link</code></td>
-          </tr>
-          <tr>
             <td><span class="tc-badge tc-cb">CB-1</span></td>
             <td>下单成功后（接口返回）</td>
             <td><code>trackCallbackCollect</code></td>
@@ -956,11 +925,6 @@
           </tr>
         </tbody>
       </table>
-      <div class="callout warn">
-        <span class="callout-icon">⚠</span>
-        <span><strong>C-13 Web 防抖说明：</strong>300ms 内连续快速 hover 只上报 <strong>1 次</strong>，需间隔超过 300ms 再次悬停才会重复上报。</span>
-      </div>
-
       <!-- 四、持仓页交互 -->
       <h3>四、持仓页交互</h3>
       <table class="api-table">
@@ -1035,11 +999,6 @@
             <td><span class="no-event-label">switch_sport_filter 只上报 1 次，不叠加 2 次</span></td>
           </tr>
           <tr>
-            <td><span class="tc-badge tc-n">N-3</span></td>
-            <td>下单面板 hover Settlement Rules 300ms 内快速多次</td>
-            <td><span class="no-event-label">view_trade_rules 只上报 1 次</span></td>
-          </tr>
-          <tr>
             <td><span class="tc-badge tc-n">N-4</span></td>
             <td>点击卖出弹窗「Confirm」确认成功后弹窗自动关闭</td>
             <td><span class="no-event-label">cancel_sell_position 不上报</span></td>
@@ -1054,7 +1013,7 @@
           PageView 用例
         </div>
         <div class="verify-summary-item">
-          <span class="vs-num vs-green">15</span>
+          <span class="vs-num vs-green">13</span>
           Click 用例
         </div>
         <div class="verify-summary-item">
@@ -1062,12 +1021,12 @@
           Callback 用例
         </div>
         <div class="verify-summary-item">
-          <span class="vs-num" style="color:#f59e0b">4</span>
+          <span class="vs-num" style="color:#f59e0b">3</span>
           反例场景
         </div>
         <div class="verify-summary-item">
-          <span class="vs-num vs-total">23</span>
-          测试用例总计
+          <span class="vs-num vs-total">20</span>
+          埋点事件总计
         </div>
       </div>
     </div>
